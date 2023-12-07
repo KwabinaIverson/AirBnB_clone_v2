@@ -1,27 +1,41 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# Sets up a web server for deployment of web_static.
 
-# Install Nginx if not already installed
-if ! command -v nginx &> /dev/null; then
-    sudo apt-get -y update
-    sudo apt-get -y install nginx
-fi
+apt-get update
+apt-get install -y nginx
+
 
 # Create necessary folders
-sudo mkdir -p /data/web_static/releases/test
-sudo mkdir -p /data/web_static/shared
-sudo chown -R ubuntu:ubuntu /data
+mkdir -p /data/web_static/releases/test/
+mkdir -p /data/web_static/shared/
+echo "Holberton School" > /data/web_static/releases/test/index.html
+ln -sf /data/web_static/releases/test/ /data/web_static/current
 
-# Create a fake HTML file
-echo "<html><head></head><body>HBNB Web Static Test</body></html>" | sudo tee /data/web_static/releases/test/index.html
+# Change ownership and group
+sudo chown -R ubuntu /data/
+sudo chgrp -R ubuntu /data/
 
-# Create or recreate symbolic link
-sudo ln -sf /data/web_static/releases/test/ /data/web_static/current
 
-# Update Nginx configuration
-nginx_config="/etc/nginx/sites-available/default"
+# Nginx configuration
+printf %s "server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    add_header X-Served-By $hostname;
+    root   /var/www/html;
+    index  index.html index.htm;
+    location /hbnb_static {
+        alias /data/web_static/current;
+        index index.html index.htm;
+    }
+    location /redirect_me {
+        return 301 http://github.com/KwabinaIverson;
+    }
+    error_page 404 /404.html;
+    location /404 {
+      root /var/www/html;
+      internal;
+    }
+}" > /etc/nginx/sites-available/default
 
-# Add an alias to the server block
-sudo sed -i '/server_name _;/a \\tlocation /hbnb_static/ {\n\t\talias /data/web_static/current/;\n\t}' "$nginx_config"
-
-# Restart Nginx to apply changes
-sudo service nginx restart
+# Restart Nginx
+service nginx restart
