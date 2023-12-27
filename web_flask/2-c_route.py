@@ -2,9 +2,10 @@
 """
 This script starts a Flask web application.
 
-The web application listens on 0.0.0.0, port 5000, and has two routes:
+The web application listens on 0.0.0.0, port 5000, and has three routes:
 - /: displays "Hello HBNB!"
 - /hbnb: displays "HBNB"
+- /c/<text>: displays "C " followed by the value of the text variable (replace underscore _ symbols with a space)
 
 The option strict_slashes=False is used in the route definitions.
 """
@@ -30,7 +31,7 @@ def hbnb():
 @app.route('/c/<text>', strict_slashes=False)
 def show_variable(text):
     """
-    Display "C" followed by the varible
+    Display "C" followed by the variable
     """
     return f'C {escape(text)}'
 
