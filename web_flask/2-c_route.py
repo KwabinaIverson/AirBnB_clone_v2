@@ -9,7 +9,7 @@ The web application listens on 0.0.0.0, port 5000, and has two routes:
 The option strict_slashes=False is used in the route definitions.
 """
 
-from flask import Flask
+from flask import Flask, escape
 
 app = Flask(__name__)
 
