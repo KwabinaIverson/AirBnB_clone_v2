@@ -1,39 +1,41 @@
 #!/usr/bin/python3
 """
-This script starts a Flask web application.
+This script starts a Flask web application with specific routes.
 
-The web application listens on 0.0.0.0, port 5000, and has three routes:
-- /: displays "Hello HBNB!"
-- /hbnb: displays "HBNB"
-- /c/<text>: displays "C " followed by the value of the text variable (replace underscore _ symbols with a space)
-
-The option strict_slashes=False is used in the route definitions.
+Web application listens on 0.0.0.0, port 5000.
+Routes:
+- /: display "Hello HBNB!"
+- /hbnb: display "HBNB"
+- /c/<text>: display "C " followed by the value of the text variable (replace underscore _ symbols with a space)
+Uses the option strict_slashes=False in route definitions.
 """
 
-from flask import Flask, escape
+from flask import Flask
 
 app = Flask(__name__)
 
 @app.route('/', strict_slashes=False)
 def hello_hbnb():
     """
-    Displays "Hello HBNB!" when the root route is accessed.
+    Displays "Hello HBNB!" on the main route.
     """
     return 'Hello HBNB!'
 
 @app.route('/hbnb', strict_slashes=False)
 def hbnb():
     """
-    Displays "HBNB" when the /hbnb route is accessed.
+    Displays "HBNB" on the /hbnb route.
     """
     return 'HBNB'
 
 @app.route('/c/<text>', strict_slashes=False)
-def show_variable(text):
+def c_text(text):
     """
-    Display "C" followed by the variable
+    Displays "C " followed by the value of the text variable.
+    Replaces underscores with spaces.
     """
-    return f'C {escape(text)}'
+    text = text.replace('_', ' ')
+    return 'C {}'.format(text)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
