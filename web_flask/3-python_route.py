@@ -7,8 +7,9 @@ Routes:
 - /: display "Hello HBNB!"
 - /hbnb: display "HBNB"
 - /c/<text>: display "C ", followed by the value of the text variable (replace underscore _ symbols with a space)
-- /python/<text>: display "Python ", followed by the value of the text variable (replace underscore _ symbols with a space)
-Default value of text is "is cool".
+- /python/(<text>): display "Python ", followed by the value of the text variable (replace underscore _ symbols with a space)
+  Default value of text is "is cool".
+- /number/<n>: display "n is a number" only if n is an integer
 Uses the option strict_slashes=False in route definitions.
 """
 
@@ -40,6 +41,7 @@ def c_text(text):
     return 'C {}'.format(text)
 
 @app.route('/python/<text>', strict_slashes=False)
+@app.route('/python/', strict_slashes=False)
 def python_text(text='is_cool'):
     """
     Displays "Python ", followed by the value of the text variable.
