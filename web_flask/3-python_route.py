@@ -44,7 +44,7 @@ def python_text(text):
     Replaces underscores with spaces.
     """
     text = text.replace('_', ' ')
-    return 'C {}'.format(text)
+    return 'Python {}'.format(text)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
