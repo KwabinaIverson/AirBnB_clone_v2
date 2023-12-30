@@ -6,7 +6,9 @@ Web application listens on 0.0.0.0, port 5000.
 Routes:
 - /: display "Hello HBNB!"
 - /hbnb: display "HBNB"
-- /c/<text>: display "C " followed by the value of the text variable (replace underscore _ symbols with a space)
+- /c/<text>: display "C ", followed by the value of the text variable (replace underscore _ symbols with a space)
+- /python/<text>: display "Python ", followed by the value of the text variable (replace underscore _ symbols with a space)
+Default value of text is "is cool".
 Uses the option strict_slashes=False in route definitions.
 """
 
@@ -31,7 +33,7 @@ def hbnb():
 @app.route('/c/<text>', strict_slashes=False)
 def c_text(text):
     """
-    Displays "C " followed by the value of the text variable.
+    Displays "C ", followed by the value of the text variable.
     Replaces underscores with spaces.
     """
     text = text.replace('_', ' ')
@@ -40,8 +42,8 @@ def c_text(text):
 @app.route('/python/<text>', strict_slashes=False)
 def python_text(text='is_cool'):
     """
-    Displays "Python " followed by the value of the text.
-    Replaces underscores with spaces.
+    Displays "Python ", followed by the value of the text variable.
+    Replaces underscores with spaces. Default value is "is cool".
     """
     text = text.replace('_', ' ')
     return 'Python {}'.format(text)
