@@ -1,24 +1,35 @@
 #!/usr/bin/env bash
+# Sets up a web server for deployment of web_static.
 
-# Install Nginx if it's not already installed
 apt-get update
-apt-get -y install nginx
+apt-get install -y nginx
 
-# Create the necessary directory structure
-mkdir -p /data/web_static/{releases/test,shared}
+mkdir -p /data/web_static/releases/test/
+mkdir -p /data/web_static/shared/
+echo "Holberton School" > /data/web_static/releases/test/index.html
+ln -sf /data/web_static/releases/test/ /data/web_static/current
 
-# Create a fake HTML file for testing
-echo '<html> <head> </head> <body> Holberton School </body> </html>' > /data/web_static/releases/test/index.html
+chown -R ubuntu /data/
+chgrp -R ubuntu /data/
 
-# Correctly manage symbolic links
-ln -snf /data/web_static/releases/test /data/web_static/current
+printf %s "server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    add_header X-Served-By $hostname;
+    root   /var/www/html;
+    index  index.html index.htm;
+    location /hbnb_static {
+        alias /data/web_static/current;
+        index index.html index.htm;
+    }
+    location /redirect_me {
+        return 301 http://github.com/KwabinaIverson;
+    }
+    error_page 404 /404.html;
+    location /404 {
+      root /var/www/html;
+      internal;
+    }
+}" > /etc/nginx/sites-available/default
 
-# Set ownership and permissions
-chown -hR ubuntu:ubuntu /data
-
-# Update Nginx configuration
-sed -i '51 i \
-\tlocation /hbnb_static {\n\talias /data/web_static/current;\n\t}' /etc/nginx/sites-available/default
-
-# Restart Nginx
 service nginx restart
